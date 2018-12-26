@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="priv.seesea.seeseabookclub.mapper.BookMapper">
+
+    <resultMap id="bookmapper" type="book">
+        <id column="book_id" property="bookId"/>
+        <result column="book_user_id" property="bookUserId"/>
+
+        <result column="book_name" property="bookName"/>
+        <result column="book_author" property="bookAuthor"/>
+        <result column="book_introduce" property="bookIntroduce"/>
+        <result column="book_catalog" property="bookCatalog"/>
+        <result column="book_value" property="bookValue"/>
+        <result column="book_mark" property="bookMark"/>
+        <result column="book_tag" property="bookTag"/>
+        <result column="book_replace" property="bookReplace"/>
+        <result column="book_remark" property="bookRemark"/>
+        <result column="book_statu" property="bookStatu"/>
+        <result column="book_cover" property="bookCover"/>
+        <result column="book_first_classify" property="bookFirstClassify"/>
+        <result column="book_second_classify" property="bookSecondClassify"/>
+        <result column="book_third_classify" property="bookThirdClassify"/>
+    </resultMap>
+
+    <!--通过书的id查找书-->
+    <select id="getBookByBookId" parameterType="String" resultMap="bookmapper">
+        SELECT
+        book_id,book_user_id,book_name,book_author,book_introduce,book_catalog,book_value,
+        book_mark,
+        book_tag,book_replace,book_remark,
+        book_statu,
+        book_cover,book_first_classify,
+        book_second_classify,book_third_classify
+        from
+        tb_book
+        where
+        book_id = #{bookId}
+    </select>
+
+    <!--通过n本书 book_introduce,,
+        book_second_classify,book_third_classify book_tag,-->
+    <select id="getNumBook" parameterType="int" resultMap="bookmapper">
+        SELECT
+        book_id,book_user_id,book_name,book_author,book_catalog,book_value,
+        book_mark,
+        book_replace,book_remark,
+        book_statu,
+        book_cover,book_first_classify
+        from
+        tb_book
+        limit
+        0,#{num}
+    </select>
+
+
+    <!--通过书名查找书-->
+    <select id="getBookByBookName" parameterType="string" resultMap="bookmapper">
+        select
+        book_id,book_user_id,book_name,book_author,book_introduce,book_catalog,book_value,
+        book_mark,
+        book_tag,book_replace,book_remark,
+        book_statu,
+        book_cover,book_first_classify,
+        book_second_classify,book_third_classify
+        from
+        tb_book
+        where
+        book_name = #{bookName}
+    </select>
+
+    <!--根据分类查找 一级-->
+    <select id="getBookByClassifyFirst" parameterType="Integer" resultMap="bookmapper">
+        select
+        book_id,book_user_id,book_name,book_author,book_introduce,book_catalog,book_value,
+        book_mark,
+        book_tag,book_replace,book_remark,
+        book_statu,
+        book_cover,book_first_classify,
+        book_second_classify,book_third_classify
+        from
+        tb_book
+        where
+        book_first_classify = #{classify}
+    </select>
+
+    <!--根据分类进行查找 二级分类 和 一级分类-->
+    <select id="getBookByClassifySecond" parameterType="Integer" resultMap="bookmapper">
+        select
+        book_id,book_user_id,book_name,book_author,book_introduce,book_catalog,book_value,
+        book_mark,
+        book_tag,book_replace,book_remark,
+        book_statu,
+        book_cover,book_first_classify,
+        book_second_classify,book_third_classify
+        from
+        tb_book
+        where
+        book_first_classify = #{firstClassify} and book_second_classify = #{secondClassify}
+    </select>
+
+    <!--根据标签进行模糊查询-->
+    <select id="getBookByTag" parameterType="string" resultMap="bookmapper">
+        select
+        book_id,book_user_id,book_name,book_author,book_introduce,book_catalog,book_value,
+        book_mark,
+        book_tag,book_replace,book_remark,
+        book_statu,
+        book_cover,book_first_classify,
+        book_second_classify,book_third_classify
+        from
+        tb_book
+        where
+        book_tag like '%${tag}%'
+    </select>
+
+    <!--通过书籍的id删除书籍-->
+    <!--外键级联不能删除-->
+    <delete id="delBookByBookId">
+        delete
+        from
+        tb_book
+        where
+        book_id = #{bookId}
+    </delete>
+
+    <!--通过书籍id修改使书籍不可见-->
+    <update id="putBookByBookIdNotSee">
+        update
+        tb_book
+        set
+        book_statu = 0
+        where
+        book_id = #{bookId}
+    </update>
+
+    <!--上传书籍-->
+    <insert id="postBook" parameterType="book" useGeneratedKeys="true" keyProperty="bookId"  keyColumn="book_id">
+
+        insert
+        into
+        tb_book
+        (
+        book_id,
+        book_user_id,book_name,
+        book_author,book_introduce,
+        book_catalog,book_value,
+        book_tag,book_replace,
+        book_cover,book_first_classify,
+        book_second_classify,book_third_classify)
+        values
+        (
+        #{bookId},
+        #{bookUserId},#{bookName},
+        #{bookAuthor},#{bookIntroduce},
+        #{bookCatalog},#{bookValue},
+        #{bookTag},#{bookReplace},
+        #{bookCover},
+        #{bookFirstClassify},
+        #{bookSecondClassify},#{bookThirdClassify})
+    </insert>
+
+    <!--为书评列表查询-->
+    <select id="getBookForReview" parameterType="String" resultMap="bookmapper">
+        SELECT book_name,book_author
+        FROM
+        tb_book
+        where book_id = #{bookd}
+    </select>
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="priv.seesea.seeseabookclub.mapper.ClassifyMapper">
+
+    <resultMap id="bookmapper" type="book">
+        <id column="book_id" property="bookId"/>
+        <result column="book_user_id" property="bookUserId"/>
+
+        <result column="book_name" property="bookName"/>
+        <result column="book_author" property="bookAuthor"/>
+        <result column="book_introduce" property="bookIntroduce"/>
+        <result column="book_catalog" property="bookCatalog"/>
+        <result column="book_value" property="bookValue"/>
+        <result column="book_mark" property="bookMark"/>
+        <result column="book_tag" property="bookTag"/>
+        <result column="book_replace" property="bookReplace"/>
+        <result column="book_remark" property="bookRemark"/>
+        <result column="book_statu" property="bookStatu"/>
+        <result column="book_cover" property="bookCover"/>
+        <result column="book_first_classify" property="bookFirstClassify"/>
+        <result column="book_second_classify" property="bookSecondClassify"/>
+        <result column="book_third_classify" property="bookThirdClassify"/>
+    </resultMap>
+
+
+
+    <!--通过书的的类别查找书-->
+    <select id="getClassifyContent" parameterType="int" resultMap="bookmapper">
+        SELECT
+        book_id,book_user_id,book_name,book_author,book_catalog,book_value,
+        book_mark,
+        book_tag,book_replace,book_remark,
+        book_statu,
+        book_cover,book_first_classify,
+        book_second_classify,book_third_classify
+        from
+        tb_book
+        where
+        book_first_classify = #{classify}
+        or book_second_classify = #{classify}
+        or book_third_classify = #{classify}
+    </select>
+</mapper>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="priv.seesea.seeseabookclub.mapper.LoginMapper">
+
+    <resultMap id="loginmapper" type="login">
+        <id column="login_id" property="loginId"/>
+
+        <result column="login_user_id" property="loginUserId"/>
+        <result column="login_series" property="loginSeries"/>
+        <result column="login_card" property="loginCard"/>
+        <result column="login_end" property="loginEnd"/>
+    </resultMap>
+
+    <!--通过主键删除登录信息-->
+    <delete id="delLoginByLoginId">
+        delete
+        from tb_login
+        where
+          login_id = #{loginId}
+    </delete>
+
+    <!--增加登录信息-->
+    <insert id="postLogin" parameterType="login">
+        insert
+        into tb_login
+        (login_user_id,login_series,login_card,login_end)
+        values
+        (#{loginUserId},#{loginSeries},#{loginCard},#{loginEnd})
+    </insert>
+
+    <!--查找登录表的信息-->
+    <select id="getLoginByLoginId" parameterType="String" resultMap="loginmapper">
+        select
+          login_user_id，login_series,login_card,login_end
+        from tb_login
+        where
+          login_id = #{loginId}
+    </select>
+
+    <!--通过id和uuid值查询自动登录记录-->
+    <select id="getLoginByUserIdAndSeries" resultMap="loginmapper">
+        select
+          login_card,login_end
+        from tb_login
+        where
+          login_user_id = #{userId} and login_series = #{loginSeries}
+    </select>
+
+    <!--通过用户的id查找自动登录的信息-->
+    <select id="getLoginByUserId" parameterType="String" resultMap="loginmapper">
+        select
+          login_id,login_series,login_card,login_end
+        from tb_login
+        where
+          login_user_id= #{loginUserId}
+    </select>
+
+    <!--通过用户的id获取密码-->
+    <select id="getPassward" parameterType="string" resultType="string">
+        select
+          user_passward
+        from tb_user
+        where user_phone = #{userPhone}
+    </select>
+
+</mapper>

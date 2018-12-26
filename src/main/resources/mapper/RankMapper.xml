@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="priv.seesea.seeseabookclub.mapper.RankMapper">
+
+    <!--<resultMap id="bookmapper" type="book">-->
+        <!--<id column="book_id" property="bookId"/>-->
+        <!--<result column="book_user_id" property="bookUserId"/>-->
+
+        <!--<result column="book_name" property="bookName"/>-->
+        <!--<result column="book_author" property="bookAuthor"/>-->
+        <!--<result column="book_introduce" property="bookIntroduce"/>-->
+        <!--<result column="book_catalog" property="bookCatalog"/>-->
+        <!--<result column="book_value" property="bookValue"/>-->
+        <!--<result column="book_mark" property="bookMark"/>-->
+        <!--<result column="book_tag" property="bookTag"/>-->
+        <!--<result column="book_replace" property="bookReplace"/>-->
+        <!--<result column="book_remark" property="bookRemark"/>-->
+        <!--<result column="book_statu" property="bookStatu"/>-->
+        <!--<result column="book_cover" property="bookCover"/>-->
+        <!--<result column="book_first_classify" property="bookFirstClassify"/>-->
+        <!--<result column="book_second_classify" property="bookSecondClassify"/>-->
+        <!--<result column="book_third_classify" property="bookThirdClassify"/>-->
+    <!--</resultMap>-->
+
+    <!--&lt;!&ndash;通过时间进行排序&ndash;&gt;-->
+    <!--<select id="getRankBookByDate" resultMap="book" parameterType="date">-->
+        <!--select ROWS(2)-->
+        <!--from tb_book-->
+        <!--ORDER BY book_replace DESC-->
+    <!--</select>-->
+
+    <!--通过点赞排行-->
+
+
+</mapper>

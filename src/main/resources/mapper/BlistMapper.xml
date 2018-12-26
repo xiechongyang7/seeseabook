@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="priv.seesea.seeseabookclub.mapper.BlistMapper">
+    <resultMap id="blistmapper" type="blist">
+        <id column="blist_id" property="blistId"/>
+        <result column="blist_user_id" property="blistUserId"/>
+
+        <result column="blist_name" property="blistName"/>
+        <result column="blist_create_time"  property="blistCreateTime"/>
+        <result column="blist_remark" property="blistRemark"/>
+    </resultMap>
+    <resultMap id="blistmapperbook" type="blist" extends="blistmapper">
+        <collection property="blistBooklist" column="blist_id" select="priv.seesea.seeseabookclub.dao.mapper.BlistBookMapper.getBookByBlistId"/>
+    </resultMap>
+
+    <!--创建书单-->
+    <insert id = "postBlist" parameterType="blist">
+      insert
+      into
+      tb_blist
+        (blist_id,blist_user_id,blist_name,blist_create_time,blist_remark)
+      values
+        (#{blistId},#{blistUserId},#{blistName},#{blistCreateTime},#{blistRemark})
+    </insert>
+
+    <!--通过用户的id查询用户的书单-->
+    <select id="getBlistByUserId" parameterType="String" resultMap="blistmapperbook">
+        select
+        *
+        from tb_blist
+        where blist_user_id = #{userId}
+    </select>
+
+    <!--通过书单的id查询书单-->
+    <select id="getBlistByBlistId" parameterType="String" resultMap = "blistmapperbook">
+        select
+        *
+        from
+        tb_blist
+        where blist_id = #{blistId}
+    </select>
+
+    <!--通过书籍id查询书单-->
+    <select id="getBlistByBookId" parameterType="String" resultMap="blistmapper">
+        <!--未实现-->
+    </select>
+
+    <!--通过书单id删除书单-->
+    <delete id = "delBlistByBlistId">
+        delete
+        from
+        tb_blist
+        where
+        blist_id = #{blistId}
+    </delete>
+</mapper>

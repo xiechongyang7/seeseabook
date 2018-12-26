@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="priv.seesea.seeseabookclub.mapper.BlistBookMapper">
+    <resultMap id="booklistmapper" type="blistBook">
+        <id column = "blist_book_id" property="blistBookId"/>
+        <result column="blist_book_blist_id" property="blistBookBlistId"/>
+        <result column="blist_book_book_id" property="blistBookBookId"/>
+    </resultMap>
+    <resultMap id="booklistmapperbook" type="blistBook" extends="booklistmapper">
+        <collection property="bookList" column="blist_book_book_id" select ="priv.seesea.seeseabookclub.dao.mapper.BookMapper.getBookByBookId"/>
+    </resultMap>
+    <resultMap id="booklistmapperblist" type="blistBook" extends="booklistmapper">
+        <collection property="blists" column="blist_book_blist_id" select="priv.seesea.seeseabookclub.dao.mapper.BlistMapper.getBlistByBlistId"/>
+    </resultMap>
+
+    <!--通过书单id查询包含的书-->
+    <select id="getBookByBlistId" parameterType="String" resultMap="booklistmapperbook">
+        select
+        * FROM
+        tb_blist_book
+        where blist_book_blist_id = #{blist}
+    </select>
+
+    <!--通过书籍id查询包含的书单-->
+    <select id="getBlistByBookId" parameterType="String" resultMap="booklistmapperblist">
+        SELECT
+        * FROM
+        tb_blist_book
+        where blist_book_book_id = #{bookId}
+    </select>
+
+</mapper>

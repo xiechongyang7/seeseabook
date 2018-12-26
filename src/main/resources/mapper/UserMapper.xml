@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="priv.seesea.seeseabookclub.mapper.UserMapper">
+
+    <resultMap type="user" id="usermapper">
+        <id column="user_id" property="userId"/>
+        <result typeHandler="priv.seesea.seeseabookclub.handler.SexEnumHandler"
+                column="user_sex" property="userSex"
+                javaType="String"
+                jdbcType="INTEGER"/>
+        <result column="user_portrait" property="userPortrait"/>
+        <result column="user_nickname" property="userNickname"/>
+        <result column="user_signature" property="userSignature"/>
+        <result column="user_email" property="userEmail"/>
+        <result
+                column="user_birthday" property="userBirthday"
+
+                jdbcType="TIMESTAMP"
+                />
+        <result column="user_vip" property="userVip"/>
+        <result column="user_coin" property="userCoin"/>
+        <result column="user_phone" property="userPhone"/>
+        <result column="user_passward" property="userPassward"/>
+    </resultMap>
+
+    <resultMap type="user" id="usermapper2" extends="usermapper">
+        <association property="address" column="user_id" select="priv.seesea.seeseabookclub.mapper.AddressMapper.getAddressByUserId"/>
+    </resultMap>
+
+
+    <!--用户id查询带有地址的信息-->
+    <select id="getUserAndAdress" parameterType="String" resultMap="usermapper2">
+        select user_id,user_sex,user_portrait,user_nickname,user_signature,user_email,user_birthday,user_vip,user_coin,user_phone,user_passward
+        from
+		    tb_user
+		where
+		    user_id = #{userId}
+
+    </select>
+
+
+
+    <!-- 用户手机号查询一个用户的详细信息 -->
+    <select id="getUserByUserId" parameterType="String" resultMap="usermapper">
+		select 
+		    user_id,user_sex,user_portrait,user_nickname,user_signature,user_email,user_birthday,user_vip,user_coin,user_phone,user_passward
+		from 
+		    tb_user
+		where
+		    user_phone = #{userPhone}
+	</select>
+
+    <!--查找用户的名字-->
+    <select id="getNameById" parameterType="String" resultType="String">
+        select
+          user_nickname
+        from
+          tb_user
+        where
+          user_id = #{userId}
+    </select>
+
+
+    <!-- 通过用户id修改用户的信息 -->
+    <!--未测试-->
+    <update id="postUserById">
+        update
+            tb_user
+        <trim prefix="set" suffixOverrides=",">
+            <if test="userSex != null and userSex != ''">
+                user_sex = #{userSex},
+            </if>
+            <if test="userPortrait != null and userPortrait != ''">
+                user_portrait = #{userPortrait},
+            </if>
+            <if test="userNickname != null and userNickname != ''">
+                user_nickname = #{userNickname},
+            </if>
+            <if test="userSignature != null and userSignature != ''">
+                user_signature = #{userSignature},
+            </if>
+            <if test="userEmail != null and userEmail != ''">
+                user_email = #{userEmail},
+            </if>
+            <if test="userBirthday != null">
+                user_birthday = #{userBirthday},
+            </if>
+
+            <if test="userPhone != null and userPhone != ''">
+                user_phone = #{userPhone},
+            </if>
+        </trim>
+        where user_id = #{userId}
+    </update>
+
+    <!--修改用户为会员-->
+    <update id="putUserVipByUserId">
+        update
+            tb_user
+        set
+            user_vip = #{vip}
+        where
+             user_id = #{userId}
+    </update>
+
+
+    <!--修改密码-->
+    <update id="putUserPasswardByUserId">
+        update
+            tb_user
+        set
+            user_passward = #{passward}
+        where
+            user_id = #{userId}
+    </update>
+
+    <!--修改密码-->
+    <update id="putUserPasswardByUserAndCoin">
+        update
+          tb_user
+        set
+          user_coin = user_coin + #{coinNum}
+        where
+          user_id = #{userId}
+    </update>
+
+    <!--修改用户的头像-->
+    <update id="putUserPortraitByUserId">
+        update
+            tb_user
+        set
+            user_portrait = #{portrait}
+        where
+            user_id = #{userId}
+    </update>
+
+</mapper>

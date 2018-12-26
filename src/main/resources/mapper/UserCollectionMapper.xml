@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="priv.seesea.seeseabookclub.mapper.UserCollectionMapper">
+    <resultMap id="userConectionMapper" type="usercollection">
+        <id column="collection_id" property="collectionId"/>
+        <result column="collection_user_id" property="collectionUserId"/>
+        <result column="collection_book_id" property="collectionBookId"/>
+        <result column="collection_folder" property="collectionFoler"/>
+
+        <association property="book" column="collection_book_id" select="priv.seesea.seeseabookclub.mapper.BookMapper.getBookByBookId"/>
+    </resultMap>
+
+    <!--通过用户id查询用户的收藏-->
+    <select id = "getCollectionBookByUserId" parameterType = "String" resultMap ="userConectionMapper">
+        select
+          collection_id,collection_user_id,collection_book_id
+          from
+          tb_collection
+          where collection_user_id = #{userId}
+    </select>
+
+    <!--检验是否已经收藏-->
+    <select id = "getCollectionByUserIdAndBookId" resultType="int">
+        select
+        COUNT(1)
+        from
+        tb_collection
+        where collection_user_id = #{userId} and collection_book_id = #{bookId}
+    </select>
+    <!--通过用过户id和收藏id删除收藏-->
+    <!--未测试-->
+    <delete id="delBookByUserIdAndBookID">
+        delete
+        FROM tb_collection
+        where collection_user_id =#{userId} and collection_book_id = #{book_id}
+    </delete>
+
+    <!--通过id删除收藏-->
+    <delete id="delBookByCollectionId">
+        delete
+        from tb_collection
+        where collection_id = #{collectionId}
+    </delete>
+
+    <!--增加收藏-->
+    <insert id="postCollection" parameterType="usercollection">
+        insert
+        into
+        tb_collection
+        (collection_id,collection_user_id,collection_book_id,collection_folder)
+        VALUES
+        (#{collectionId},#{collectionUserId},#{collectionBookId},#{collectionFolder})
+    </insert>
+
+</mapper>

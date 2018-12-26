@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="priv.seesea.seeseabookclub.mapper.CommentMapper">
+
+    <resultMap id="commentMapper" type="comment">
+        <id column="comment_id" property="commentId"/>
+
+        <result column="comment_user_id" property="commentUserId"/>
+        <result column="comment_appraise" property="commentAppraise"/>
+        <result column="comment_book_id" property="commentBookId"/>
+        <result column="comment_review_id" property="commentReviewId"/>
+        <result column="comment_reply" property="commentReply"/>
+        <result column="comment_content" property="commentContent"/>
+        <result column="comment_time" property="commentTime"/>
+        <result column="comment_score" property="commentScore"/>
+        <result column="comment_read" property="commentRead"/>
+        <!--级联查找名字-->
+        <association property="userName" column="comment_user_id" select="priv.seesea.seeseabookclub.mapper.UserMapper.getNameById"/>
+        <association property="replayName" column="comment_reply" select="priv.seesea.seeseabookclub.mapper.CommentMapper.getNameByReplyId"/>
+        <collection property="commentsSon" column="comment_id" select="priv.seesea.seeseabookclub.mapper.CommentMapper.getCommentSon"/>
+
+
+    </resultMap>
+    <!--通过书籍id查询评论-->
+    <select id="getCommentByBookId" parameterType="String" resultMap="commentMapper">
+        select
+        comment_id,
+        comment_user_id,comment_appraise,
+        comment_book_id,comment_review_id,comment_reply,
+        comment_content,comment_time,comment_score,comment_read
+        from
+        tb_comment
+        where
+        comment_book_id = #{bookId}
+    </select>
+    <!--&lt;!&ndash;通过书评id查询评论&ndash;&gt;-->
+    <!--<select id="getCommentByReviewId" parameterType="Long" resultMap="commentMapper">-->
+        <!--select-->
+        <!--comment_id,-->
+        <!--comment_user_id,comment_appraise,-->
+        <!--comment_book_id,comment_review_id,comment_reply,-->
+        <!--comment_content,comment_time,comment_score,comment_read-->
+        <!--from-->
+        <!--tb_comment-->
+        <!--where-->
+        <!--comment_review_id = #{reviewId}-->
+    <!--</select>-->
+
+    <!--查找子评论-->
+    <select id="getCommentSon" parameterType="String" resultMap="commentMapper">
+        select
+        comment_id,
+          comment_user_id,comment_appraise,
+          comment_book_id,comment_review_id,comment_reply,
+          comment_content,comment_time,comment_score,comment_read
+        FROM
+          tb_comment
+        where comment_reply = #{commentId}
+    </select>
+    <!--根据回复id查询姓名-->
+    <select id="getNameByReplyId" parameterType="String" resultType="string">
+        select
+          user_nickname
+        from
+          tb_user
+        where
+          user_id = (
+          select
+            comment_user_id
+          from
+            tb_comment
+          where
+            comment_id = #{reply}
+          )
+    </select>
+
+
+
+    <!--增加一条评论-->
+    <insert id="postComment" parameterType="comment">
+        insert
+        into tb_comment
+        (comment_user_id,comment_appraise,
+        comment_book_id,comment_review_id,comment_reply,
+        comment_content,comment_time,comment_score,comment_read)
+        values
+        (#{commentUserId},#{commentAppraise},
+        #{commentBookId},#{commentReviewId},#{commentReply},
+        #{commentContent},#{commentTime},#{commentScore},#{commentRead}
+        )
+    </insert>
+
+    <!--通过用户id查询评论-->
+    <select id="getCommentByUserId" parameterType="String" resultMap="commentMapper">
+        select
+          comment_id,
+          comment_user_id,comment_appraise,
+          comment_book_id,comment_review_id,comment_reply,
+          comment_content,comment_time,comment_score,comment_read
+        from
+          tb_comment
+        where
+          comment_user_id = #{userId}
+    </select>
+
+
+
+    <!--通过书评id查询-->
+    <select id="getCommentByReviewId" parameterType="String" resultMap="commentMapper">
+        select
+        comment_id,
+        comment_user_id,comment_appraise,
+        comment_book_id,comment_review_id,comment_reply,
+        comment_content,comment_time,comment_score,comment_read
+        from
+          tb_comment
+        where
+          comment_review_id = #{reviewId}
+    </select>
+
+    <!--查询子评论-->
+    <select id="getCommmentSon">
+
+    </select>
+
+    <!--通过用户id删除评论-->
+    <delete id="delComment">
+        delete
+        from
+          tb_comment
+        where
+          comment_user_id = #{userId}
+    </delete>
+
+</mapper>
